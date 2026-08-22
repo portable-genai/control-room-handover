@@ -1,0 +1,6 @@
+# Golden handover scenarios (obviously fictional). Each line is one shift-handover ask over the
+# bundled ops-worklist export fixtures, plus the INDEPENDENTLY computed expected scorecard: the
+# oracle the metrics score against, never the pipeline's own verdict. The expected figures were
+# derived by hand in the fixture generator, not read back from the engine.
+{"id": "asia-day-14d", "shift_id": "asia-day", "as_of": "2026-08-07", "lookback_days": 14, "expected_total_queue": 412, "expected_total_breached": 88, "expected_overall_severity": "critical", "expected_feed_severity": {"recon_breaks": "critical", "disputes": "medium"}}
+{"id": "asia-day-3d", "shift_id": "asia-day", "as_of": "2026-08-07", "lookback_days": 3, "expected_total_queue": 412, "expected_total_breached": 88, "expected_overall_severity": "critical", "expected_feed_severity": {"recon_breaks": "critical", "disputes": "medium"}}

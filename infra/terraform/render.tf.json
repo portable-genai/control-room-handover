@@ -1,0 +1,8 @@
+{
+  "locals": {
+    "render_region": "asia-southeast1",
+    "render_package_name": "control_room_handover",
+    "render_env_prefix": "CONTROLROOM",
+    "render_catalog_id": "F5"
+  }
+}
