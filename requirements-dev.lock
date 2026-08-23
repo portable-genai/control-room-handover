@@ -104,7 +104,7 @@ rpds-py==2026.6.3
     # via
     #   jsonschema
     #   referencing
-ruff==0.15.18
+ruff==0.16.3
     # via control-room-handover (pyproject.toml)
 speech-lexicon-kit @ git+https://github.com/portable-genai/speech-lexicon-kit@368beec2c718f3445ac20786c4a488d20de4f098
     # via control-room-handover (pyproject.toml)
