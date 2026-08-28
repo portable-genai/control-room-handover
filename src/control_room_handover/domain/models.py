@@ -203,7 +203,7 @@ class LlmRequest:
     messages: tuple[LlmMessage, ...]
     response_schema: dict[str, object] | None = None
     model: str | None = None
-    temperature: float = 0.2
+    temperature: float = 0.0  # omitted at a call site means this value; it must not sample
     max_output_tokens: int = 1024
 
 
