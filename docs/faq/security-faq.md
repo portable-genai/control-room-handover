@@ -81,7 +81,7 @@ job in one step, and `tests/unit/test_ui_surface.py` holds the repo consistent i
 The rule R8 review submission is the real outbound call. It goes through the shared
 `review-kit` client, which refuses a plaintext non-loopback URL and a missing bearer at
 construction. Inbound S2S uses `make_require_service_caller` from the commons. The outbound Hrz7
-credentials (`HRZ7_S2S_TOKEN`, `HRZ7_S2S_SIGNING_KEY`) are deliberately distinct variables from this
+credentials (`HUMAN_REVIEW_S2S_TOKEN`, `HUMAN_REVIEW_S2S_SIGNING_KEY`) are deliberately distinct variables from this
 service's own inbound `CONTROLROOM_S2S_TOKEN`, so one cannot be mistaken for the other.
 
 ## Are there secrets in the repo?
