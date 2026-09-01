@@ -81,7 +81,7 @@ It is guarded, and the guard is in two places. `tests/unit/test_demo_surface.py`
 verifies cannot exist, drives the whole arc against the real adapters, asserts the tamper step
 actually goes red (a demo with no failing panel is a sales deck), and proves the demo surface
 imports no cloud SDK in a fresh interpreter. Separately,
-`.github/workflows/demo-gate.yaml` runs `make demo-selftest`, `make portability`,
+the hosted Cloud Build check runs `make demo-selftest`, `make portability`,
 `make demo-static` and `make docs-check` on every push. That same test also requires every
 `scripts/*.py` to be described in [`scripts/README.md`](../../scripts/README.md), so the index
 cannot fall behind the directory.
