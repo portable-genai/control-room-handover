@@ -40,7 +40,7 @@ is a bounded, replaceable component.
 | Profile | Generation adapter | Behaviour |
 |---|---|---|
 | `local` | `adapters/local/generation.py` | Deterministic schema-driven narrator. No model, no network, SDK-free. Emits a fixed summary that states the shape of the handover and introduces no figure of its own, plus the source ids parsed out of the evidence block. |
-| `gcp` | `adapters/gcp/generation.py` | Gemini on the Gemini Enterprise Agent Platform, default model `gemini-2.5-flash`, `google.genai` imported lazily inside the method, JSON response mime type and the request's response schema passed through. |
+| `gcp` | `adapters/gcp/generation.py` | Gemini on the Gemini Enterprise Agent Platform, default model `gemini-3.5-flash`, `google.genai` imported lazily inside the method, JSON response mime type and the request's response schema passed through. |
 | `onprem` | `adapters/onprem/generation.py` | Fail-fast placeholder. Raises `NotImplementedError` naming the migration target rather than returning canned prose, which is the honest failure: the scorecard is deterministic and needs no model. |
 
 A second model-adjacent seam is optional text to speech for a spoken handover brief
@@ -50,7 +50,7 @@ when `CONTROLROOM_AUDIO_BUCKET` is empty rather than returning a fictitious URI.
 
 ## Remaining controls (TODO, repo owner)
 
-- **Model id, version and routing** for the `gcp` adapter (P-07): `gemini-2.5-flash` is an adapter
+- **Model id, version and routing** for the `gcp` adapter (P-07): `gemini-3.5-flash` is an adapter
   default, not a pinned decision. Pin the exact model and record it here, with the prompt template
   under version control.
 - **Budget and rate controls, and a kill switch** (P-10, P-11): there is no per-tenant token

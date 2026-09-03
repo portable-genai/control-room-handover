@@ -13,7 +13,7 @@ from __future__ import annotations
 from ...config import Settings
 from ...domain.models import LlmRequest, LlmResponse
 
-_DEFAULT_MODEL = "gemini-2.5-flash"
+_DEFAULT_MODEL = "gemini-3.5-flash"
 
 
 class CloudGenerationAdapter:
