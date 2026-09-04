@@ -21,7 +21,7 @@ exit is the thing that has no vendor in it.
   This is the dev, test and CI default, and the working proof that the domain runs entirely
   off-cloud.
 - **`gcp`** the managed services: Cloud Logging WORM audit, IAP identity, Gemini narration, Cloud
-  TTS, Cloud Trace, the Hrz4 eval gate. Every SDK import is lazy, inside the method, so the module
+  TTS, Cloud Trace, the `model-quality-gate`. Every SDK import is lazy, inside the method, so the module
   tree stays importable with no cloud SDK installed.
 - **`onprem`** fail-fast placeholders that satisfy the same Protocols. They raise
   `NotImplementedError` and name the migration target, which proves the ports are honest exit seams
@@ -82,8 +82,8 @@ second region is a tfvars change plus a settings change, not a fork.
   deletion and a reorder; only the external anchor detects a truncated tail; and neither is a
   substitute for a managed WORM sink in production. The portability script says so rather than
   overclaiming.
-- **The shared platform sinks** are not portable by this repo's choice. Tracing to Hrz5 and the
-  promotion verdict from Hrz4 are calls to systems this repo does not own; the `onprem` family
+- **The shared platform sinks** are not portable by this repo's choice. Tracing to `agent-observability` and the
+  promotion verdict from `model-quality-gate` are calls to systems this repo does not own; the `onprem` family
   refuses them so the dependency is visible rather than silently degraded.
 - **The upstream feed contract.** F5 holds a CONSUMED copy of the ops-worklist export schema rather
   than a pin to the publisher's file, which is recorded as an assumption in

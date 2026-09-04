@@ -3,7 +3,7 @@
 # of authority; these objects are a derived accessibility artifact with lifecycle expiry.
 resource "google_storage_bucket" "voice_briefs" {
   project                     = var.project_id
-  name                        = "${var.project_id}-${local.render_catalog_id}-voice"
+  name                        = "${var.project_id}-${local.render_repository}-voice"
   location                    = local.region
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"

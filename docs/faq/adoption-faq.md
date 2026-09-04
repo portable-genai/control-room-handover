@@ -92,14 +92,13 @@ Yes. The offline gate needs no network, no cloud SDK and no credentials, and the
 references no organisation secrets, so a fork's build is green immediately. You add secrets only
 when you wire the `gcp` profile. Note that the eval gate measures the *reference* golden cases until
 you rebuild them for your own queues; that is an explicit adoption step, not a silent pass. The
-Hrz4 bundle name is `control-room-handover` and needs renaming and registering with your fork.
+`model-quality-gate` bundle name is `control-room-handover` and needs renaming and registering with your fork.
 
 ### What is still open on day one?
 
 Read [`docs/practices-audit.md`](../practices-audit.md) and the `TODO (repo owner)` rows in
 [`COMPLIANCE.md`](../../COMPLIANCE.md) before you cite either as evidence. The short version: the
-policy numbers are not yet configuration (B4), the Hrz1 guardrail is not bound (R1), Hrz5
-observability and the Hrz4 bundle registration are outstanding (R2, R5), there is no retrieval so
+policy numbers are not yet configuration (B4), the `agent-guardrail-gateway` is not bound (R1), `agent-observability` and the `model-quality-gate` bundle registration are outstanding (R2, R5), there is no retrieval so
 P-05 and R3 do not apply yet, and P-10 resilience controls and P-11 cost controls have not been
 built. The deterministic scorecard, the redaction chain, the anchored audit trail and the R8
 routing are complete and tested.

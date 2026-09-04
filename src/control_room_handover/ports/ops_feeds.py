@@ -1,9 +1,10 @@
 """OpsFeedPort: the boundary that reads the F1 / F2 ops-worklist export snapshots.
 
-Modelled on Mkt4's ``MetricsPort``: it returns RAW, cited rows only and computes nothing. The
-scorecard engine owns every ratio and verdict. The registry lists EXACTLY the two feeds that
-exist in this wave (F1 recon breaks, F2 disputes); an unknown feed is refused and a snapshot
-missing a required field fails closed in the model's own validation, never silently defaulted.
+Modelled on performance-marketing-optimisation's ``MetricsPort``: it returns RAW, cited rows only
+and computes nothing. The scorecard engine owns every ratio and verdict. The registry lists EXACTLY
+the two feeds that exist in this wave (F1 recon breaks, F2 disputes); an unknown feed is refused and
+a snapshot missing a required field fails closed in the model's own validation, never silently
+defaulted.
 
 The primary managed adapter reads the F1 and F2 export tables in BigQuery; the offline adapter
 replays golden export fixtures; the on-premises adapter is a fail-fast placeholder. The domain

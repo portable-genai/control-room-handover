@@ -1,12 +1,14 @@
-"""HandoverService: the control-room shift-handover orchestrator (Mkt4 report_service shape).
+"""HandoverService: the control-room shift-handover orchestrator (performance-marketing-optimisation
+report_service shape).
 
 Owns the whole pipeline and calls only ports plus the deterministic engine. The
 :class:`ScorecardEngine` decides everything consequential (every queue depth, breach count, drain
 ratio, capacity call-out and severity); the LLM only narrates the already-computed scorecard, and
-its narration is schema-validated and grounding-checked and DISCARDED for a deterministic summary
-on any failure, so a number the engine never produced can never reach a brief. Personal data is
+its narration is schema-validated and grounding-checked and DISCARDED for a deterministic summary on
+any failure, so a number the engine never produced can never reach a brief. Personal data is
 redacted before the model sees the evidence and before the audit write. A handover always requires
-the incoming shift lead's sign-off, so the brief is routed to Hrz7 for acknowledgement (rule R8).
+the incoming shift lead's sign-off, so the brief is routed to human-review-console for
+acknowledgement (rule R8).
 
 Pure domain code: no cloud SDK, no web framework, no ADK. It takes its ports explicitly.
 """

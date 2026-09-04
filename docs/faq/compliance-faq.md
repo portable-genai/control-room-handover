@@ -9,7 +9,7 @@ mapping with an evidence file per row, plus the adopter-owned crosswalk),
 ### Is this making operational decisions autonomously?
 
 No. It is a **decision-support** service. Every handover sets `requires_human_review` and is routed
-to the **Hrz7** Human-Review and Maker-Checker Console through the shared `review-kit` client
+to the `human-review-console` through the shared `review-kit` client
 (dependency rule R8) in the same call that produced it, not left in a flag nobody reads. A handover
 is complete only when the incoming shift lead acknowledges it, and
 `domain/acknowledgement.py` records a `BREACHED` state if the window elapses without a sign-off.
@@ -27,8 +27,7 @@ ways (a pack scan plus an independent planted-literal oracle) and
 `tests/unit/test_not_falsely_green.py` proves the metric can go red.
 
 What is **not** in place is runtime guardrail screening: no `GuardrailPort` is bound, so nothing
-performs prompt-injection defence or output filtering. That is the open **R1** row, and the Hrz1
-gateway is where it belongs when a fork wires it.
+performs prompt-injection defence or output filtering. That is the open **R1** row, and the `agent-guardrail-gateway` is where it belongs when a fork wires it.
 
 ### How is the work auditable and reproducible?
 
@@ -41,7 +40,7 @@ is the server-verified principal, never a value from the request body.
 The in-repo store is hash-chained AND externally anchored, because a hash chain alone cannot detect
 a truncated tail: `CONTROLROOM_AUDIT_ANCHOR` writes the chain head to a different volume, and
 `tests/unit/test_audit_anchor.py` proves the detection along with the control case that goes
-undetected without it. The enterprise WORM sink is **Hrz5**; the local chain is the offline
+undetected without it. The enterprise WORM sink is `agent-observability`; the local chain is the offline
 stand-in, and its limits are stated rather than glossed (see
 [security-faq.md](security-faq.md)).
 
@@ -79,8 +78,8 @@ evidence) and DISCARDED for a deterministic summary on any failure.
 
 The offline eval (`eval/run_eval.py --mode smoke`) scores `scorecard_accuracy = 1.0`,
 `groundedness >= 0.99` and `pii_safety >= 0.99` on every change. `--mode gate` is the promotion
-verdict and delegates to the shared **Hrz4** authority, refusing to run off the managed profile.
-The bundle name `control-room-handover` is declared but **not yet registered** with Hrz4, which
+verdict and delegates to the shared `model-quality-gate` authority, refusing to run off the managed profile.
+The bundle name `control-room-handover` is declared but **not yet registered** with `model-quality-gate`, which
 is the open **P-08** and **R5** row. [`docs/model-card.md`](../model-card.md) records the rest of
 the outstanding model controls: a pinned model id, budget and rate limits, a kill switch, injection
 screening and a managed-profile eval run.

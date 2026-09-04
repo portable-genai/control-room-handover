@@ -21,7 +21,9 @@ def main(argv: list[str] | None = None) -> int:
     handover_cmd.add_argument("as_of", help="ISO date the handover is as of, e.g. 2026-08-07.")
     handover_cmd.add_argument("--lookback-days", type=int, default=14)
     handover_cmd.add_argument("--actor", default="cli-user@bank.example")
-    handover_cmd.add_argument("--tenant", default="", help="Tenant partition asserted to Hrz7.")
+    handover_cmd.add_argument(
+        "--tenant", default="", help="Tenant partition asserted to human-review-console."
+    )
 
     args = parser.parse_args(argv)
     container = build_container()
