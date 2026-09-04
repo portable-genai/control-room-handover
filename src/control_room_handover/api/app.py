@@ -283,7 +283,8 @@ def handover(
 
     Every consequential number comes from the deterministic scorecard engine over the F1 / F2
     ops-feed snapshots; the model only narrates. Rule R8: a handover always requires the incoming
-    shift lead's acknowledgement, so it is ROUTED to the Hrz7 console here, in the same request
+    shift lead's acknowledgement, so it is ROUTED to the human-review-console here, in the same
+    request
     that produced it. The maker is the verified principal, so the console records who handed over.
     """
     container = _container()

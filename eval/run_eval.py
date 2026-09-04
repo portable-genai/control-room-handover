@@ -7,9 +7,9 @@ Two named layers via ``--mode`` (the scaffold is ``agent_eval_kit.eval_main``):
   ``HandoverService`` against a golden set with SDK-free local adapters and scores three metrics,
   each against the DATASET'S OWN expected outcome (an independent golden oracle), never the
   pipeline's own verdict. Before scoring it PROVES every metric can go red
-  (``agent_eval_kit.assert_each_can_go_red``): a metric that cannot fail is not a metric.
-* **gate** - the promotion verdict from the shared Hrz4 authority (requires the ``gcp`` profile),
-  via ``agent_eval_kit.PromotionGateClient``.
+  (``agent_eval_kit.assert_each_can_go_red``): a metric that cannot fail is not a metric. * **gate**
+  - the promotion verdict from the shared model-quality-gate authority (requires the ``gcp``
+  profile), via ``agent_eval_kit.PromotionGateClient``.
 
 Exit is ``0`` iff every metric meets its threshold (and, in gate mode, the authority agrees).
 """
@@ -53,7 +53,8 @@ THRESHOLDS: dict[str, float] = {
     "groundedness": 0.99,
     "pii_safety": 0.99,
 }
-#: The registered Hrz4 metric bundle for this vertical (Hrz4 owns the metrics + thresholds).
+#: The registered model-quality-gate metric bundle for this vertical (model-quality-gate owns the
+#: metrics + thresholds).
 _BUNDLE = "control-room-handover"
 
 _NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
@@ -228,6 +229,6 @@ if __name__ == "__main__":
             smoke=run_smoke,
             gate=run_gate,
             default_dataset=DEFAULT_DATASET,
-            description="Offline / Hrz4 evaluation gate for F5.",
+            description="Offline / model-quality-gate for F5.",
         )
     )

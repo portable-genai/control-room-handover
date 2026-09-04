@@ -1,11 +1,11 @@
 """ScorecardEngine: the deterministic control-room scorecard over the ops-feed snapshots.
 
-The product is this engine, not the narration. Cribbed from Mkt4's ``efficiency_service``
-(pure, division-guarded ratios) and its ``anomaly_service`` (robust-z, here in ``anomaly.py``):
-given the raw cited feed snapshots and the staffing baselines it computes, per feed, the queue
-depth, the backlog aging profile, the SLA breach count and rate, the throughput, the drain ratio
-(throughput / queue depth), the capacity utilisation against the configured baseline and the
-capacity call-out, then rolls the feeds up into a control-room scorecard. Every number is owned
+The product is this engine, not the narration. Cribbed from performance-marketing-optimisation's
+``efficiency_service`` (pure, division-guarded ratios) and its ``anomaly_service`` (robust-z, here
+in ``anomaly.py``): given the raw cited feed snapshots and the staffing baselines it computes, per
+feed, the queue depth, the backlog aging profile, the SLA breach count and rate, the throughput, the
+drain ratio (throughput / queue depth), the capacity utilisation against the configured baseline and
+the capacity call-out, then rolls the feeds up into a control-room scorecard. Every number is owned
 here; the LLM narrates them and produces none.
 
 Determinism: same snapshots + same baselines + same ``as_of`` -> same scorecard. No clock read,

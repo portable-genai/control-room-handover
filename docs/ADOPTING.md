@@ -33,7 +33,7 @@ The domain is split so the boundary is physical rather than a convention.
 
 If your product is another *operational oversight* service (a control room over a different set of
 queues, a service-level dashboard, a shift or duty handover), most of the hexagon, the three
-profiles, the deterministic-then-narrate pattern, the eval gate and the Hrz7 acknowledgement
+profiles, the deterministic-then-narrate pattern, the eval gate and the `human-review-console` acknowledgement
 routing transfer directly. You replace the feed registry and the scorecard formulas, and you retune
 the policy numbers.
 
@@ -114,8 +114,8 @@ rule. The script deliberately does NOT make the decisions below.
 6. **Eval golden set.** Rebuild `eval/datasets/golden_cases.jsonl` for your queues: a fork inherits
    a green gate that measures the WRONG scorecard until you do. The gate structure and the strict
    `scorecard_accuracy = 1.0` and `pii_safety >= 0.99` metrics are generic; the golden cases are
-   yours. The Hrz4 bundle name is registered as `control-room-handover`; rename it with your
-   fork and register it with Hrz4 before `--mode gate` has an authority to ask.
+   yours. The `model-quality-gate` bundle name is registered as `control-room-handover`; rename it with your
+   fork and register it with `model-quality-gate` before `--mode gate` has an authority to ask.
 7. **The model.** Read [`docs/model-card.md`](model-card.md) before you enable the managed
    narration path: the model id, the budget and rate controls, the kill switch and the
    prompt-injection screen are all listed there as outstanding, and the deterministic scorecard
@@ -134,20 +134,20 @@ owned by sibling platform services, and you should integrate rather than rebuild
 [`docs/faq/features-faq.md`](faq/features-faq.md) for the full map). What is wired today, and what
 is not, is recorded honestly in the R1 to R8 rows of [`COMPLIANCE.md`](../COMPLIANCE.md):
 
-- **Hrz7** human-review and maker-checker console: wired. Every handover routes for the incoming
+- `human-review-console` human-review and maker-checker console: wired. Every handover routes for the incoming
   lead's acknowledgement over the shared `review-kit` (rule R8), in the same call that built
   the brief. You point it at your console; you do not re-implement it.
-- **Hrz4** AI-quality and model-risk gate: half wired. `eval/run_eval.py --mode gate` is the client
+- `model-quality-gate`: half wired. `eval/run_eval.py --mode gate` is the client
   and refuses to run off the managed profile; registering the bundle is yours.
-- **Hrz3** agent registry: half wired. The A2A card is served at
+- `agent-registry`: half wired. The A2A card is served at
   `/.well-known/agent-card.json` from the same tool table the runtime binds; registering it is
   yours.
-- **Hrz5** observability and immutable WORM audit: half wired. The audit half is local and
+- `agent-observability` and immutable WORM audit: half wired. The audit half is local and
   tamper-evident (hash chain plus an external head anchor); exporting traces and the audit stream
   to the shared sink is yours.
-- **Hrz1** guardrail gateway: **not** wired. There is no `GuardrailPort` today. Bind one before any
+- `agent-guardrail-gateway`: **not** wired. There is no `GuardrailPort` today. Bind one before any
   untrusted text reaches the model, and screen the narration on the way back.
-- **Hrz2** governed knowledge base: not used. This vertical retrieves nothing, so P-05 and R3 do
+- `enterprise-knowledge-base` governed knowledge base: not used. This vertical retrieves nothing, so P-05 and R3 do
   not apply yet. If your fork adds retrieval, both become mandatory.
 - **F1** `recon-breaks-engine` and **F2** `disputes-chargebacks-manager` are the upstream
   publishers of the worklist snapshots this service consumes. F5 computes the control-room view; it
@@ -163,11 +163,11 @@ is not, is recorded honestly in the R1 to R8 rows of [`COMPLIANCE.md`](../COMPLI
 - [ ] Replaced the feed registry, pinned the upstream export schema, and reseeded every fixture.
 - [ ] Owned the policy numbers (staffing baselines, anomaly thresholds, acknowledgement window,
       eval thresholds) with your operations and risk functions.
-- [ ] Rebuilt the eval golden set and registered your bundle name with Hrz4.
+- [ ] Rebuilt the eval golden set and registered your bundle name with `model-quality-gate`.
 - [ ] Read `docs/model-card.md` and closed its outstanding controls before enabling the managed
       narration path.
 - [ ] Reviewed the deploy posture (Dockerfile, Terraform, bind address, audit anchor on a separate
       volume).
-- [ ] Wired your Hrz7 review endpoint and decided which sibling services you integrate vs stub.
+- [ ] Wired your `human-review-console` review endpoint and decided which sibling services you integrate vs stub.
 - [ ] Ran `make drop-ui` if this fork has no user-facing surface.
 - [ ] Recorded your baseline upstream tag so you can take future fixes.

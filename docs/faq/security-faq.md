@@ -80,7 +80,7 @@ job in one step, and `tests/unit/test_ui_surface.py` holds the repo consistent i
 
 The rule R8 review submission is the real outbound call. It goes through the shared
 `review-kit` client, which refuses a plaintext non-loopback URL and a missing bearer at
-construction. Inbound S2S uses `make_require_service_caller` from the commons. The outbound Hrz7
+construction. Inbound S2S uses `make_require_service_caller` from the commons. The outbound `human-review-console`
 credentials (`HUMAN_REVIEW_S2S_TOKEN`, `HUMAN_REVIEW_S2S_SIGNING_KEY`) are deliberately distinct variables from this
 service's own inbound `CONTROLROOM_S2S_TOKEN`, so one cannot be mistaken for the other.
 
@@ -111,14 +111,14 @@ verifies perfectly. So `audit_anchor_path` (`CONTROLROOM_AUDIT_ANCHOR`) writes t
 file on a different volume under different credentials, and
 `tests/unit/test_audit_anchor.py` proves the detection, proves the control case goes UNDETECTED
 without an anchor, and proves an append after truncation refuses rather than re-anchoring. In
-production the managed WORM sink (Hrz5, or a locked Cloud Logging bucket) is the real answer; the
+production the managed WORM sink (`agent-observability`, or a locked Cloud Logging bucket) is the real answer; the
 local chain is the offline stand-in. Operating rules are in [`docs/runbook.md`](../runbook.md).
 
 ## What is explicitly out of scope for this repo?
 
-The guardrail and prompt-injection screening engine (**Hrz1**, and note it is **not wired** today,
+The guardrail and prompt-injection screening engine (`agent-guardrail-gateway`, and note it is **not wired** today,
 which is recorded as an open R1 row rather than glossed over), the governed knowledge base
-(**Hrz2**), the agent registry (**Hrz3**), the AI-quality and eval gate (**Hrz4**), the shared WORM
-audit and tracing sink (**Hrz5**), and the human-review console (**Hrz7**). The reconciliation and
+(`enterprise-knowledge-base`), the agent registry (`agent-registry`), the AI-quality and eval gate (`model-quality-gate`), the shared WORM
+audit and tracing sink (`agent-observability`), and the human-review console (`human-review-console`). The reconciliation and
 dispute engines upstream (**F1**, **F2**) are out of scope too: F5 reads their published snapshots
 and owns none of their logic. See [features-faq.md](features-faq.md) for the full boundary map.

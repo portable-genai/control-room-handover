@@ -28,7 +28,7 @@ is a bounded, replaceable component.
   repaired, and the brief records `narration_grounded=False`.
 - The brief is redacted again before the audit write and before the review payload leaves the
   process, because the review console is a shared sink.
-- `requires_human_review` is unconditionally `True` on a handover, and the brief is routed to Hrz7
+- `requires_human_review` is unconditionally `True` on a handover, and the brief is routed to `human-review-console`
   for the incoming shift lead's acknowledgement in the same call that produced it (rule R8).
   Nothing auto-executes.
 - The offline eval scores `groundedness >= 0.99` and `pii_safety >= 0.99` alongside
@@ -57,14 +57,14 @@ when `CONTROLROOM_AUDIO_BUCKET` is empty rather than returning a fictitious URI.
   budget, no request rate limit and no switch that forces deterministic-only operation. Both P-10
   and P-11 are open rows in [`COMPLIANCE.md`](../COMPLIANCE.md).
 - **Prompt-injection screening**: no `GuardrailPort` is bound, so nothing screens the evidence on
-  the way in or the narration on the way out. Bind the Hrz1 gateway (rule R1) and fail closed to
+  the way in or the narration on the way out. Bind the `agent-guardrail-gateway` (rule R1) and fail closed to
   deterministic-only when the screen is unavailable.
 - **Evaluation of the live model**: the offline eval scores the deterministic stub pipeline against
-  the golden cases. Add a managed-profile run through the Hrz4 promotion gate that scores the real
+  the golden cases. Add a managed-profile run through the `model-quality-gate` promotion gate that scores the real
   narration's groundedness against the same cases, and register the bundle
-  `control-room-handover` with Hrz4 so `--mode gate` has an authority to ask.
+  `control-room-handover` with `model-quality-gate` so `--mode gate` has an authority to ask.
 - **Trace the model call**: the observability half of rule R2 is not wired, so the prompt and
-  response record lands nowhere shared. Bind Hrz5 before the managed path carries real traffic.
+  response record lands nowhere shared. Bind `agent-observability` before the managed path carries real traffic.
 
 Until these are complete the system is safe to run offline (deterministic engine plus the stub
 narrator) and the managed model path is not production-cleared.

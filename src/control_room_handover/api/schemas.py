@@ -50,7 +50,8 @@ class HandoverResponse(BaseModel):
     #: discarded and the deterministic summary was used instead. Either way the numbers are the
     #: engine's, so a discarded narration degrades the prose, never the figures.
     narration_grounded: bool
-    #: Where the handover WENT for the incoming lead's sign-off (rule R8): the Hrz7 review id or
+    #: Where the handover WENT for the incoming lead's sign-off (rule R8): the human-review-console
+    #: review id or
     #: the local queue reference. Never empty, because a handover always routes for acknowledgement.
     review_ref: str = ""
     voice_ref: str = ""

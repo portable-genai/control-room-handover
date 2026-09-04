@@ -39,7 +39,7 @@ contract and the recorded assumption about its bounded coverage are in
 ### Is anything auto-approved? Does the handover complete itself?
 
 No. `requires_human_review` is unconditionally true on a handover, and the brief is routed to the
-**Hrz7** Human-Review and Maker-Checker Console through the shared `review-kit` client
+`human-review-console` through the shared `review-kit` client
 (dependency rule R8) in the same call that produced it, with the payload redacted before the wire
 and the verified principal threaded as maker. A handover is not done when it is written; it is done
 when the incoming shift lead signs off, and the acknowledgement clock records a breach if the
@@ -63,12 +63,12 @@ them. The Status column is what is true today, not an aspiration; the same rows 
 
 | Concern | Owned by (catalog id / repo) | F5's role today |
 |---|---|---|
-| Human review / maker-checker console | **Hrz7** `human-review-console` | wired: every handover routes for acknowledgement (R8), in all three profiles |
-| AI-quality / eval / model-risk promotion gate | **Hrz4** `model-quality-gate` | half wired: `--mode gate` is the client and refuses off the managed profile; the bundle is not yet registered |
-| Agent registry, versioning, entitlements | **Hrz3** `agent-registry` | half wired: the A2A card is served; registration is outstanding |
-| Observability, tracing, immutable WORM audit | **Hrz5** `agent-observability` | half wired: the audit half is local and tamper-evident; the shared sink is outstanding |
-| Runtime guardrail: prompt-injection defence, output screening | **Hrz1** `agent-guardrail-gateway` | **not wired.** No `GuardrailPort` exists. Bind it before untrusted text reaches the model |
-| Governed RAG / ACL-aware knowledge base | **Hrz2** `enterprise-knowledge-base` | not used: this vertical retrieves nothing, so P-05 and R3 do not apply yet |
+| Human review / maker-checker console | `human-review-console` | wired: every handover routes for acknowledgement (R8), in all three profiles |
+| AI-quality / eval / model-risk promotion gate | `model-quality-gate` | half wired: `--mode gate` is the client and refuses off the managed profile; the bundle is not yet registered |
+| Agent registry, versioning, entitlements | `agent-registry` | half wired: the A2A card is served; registration is outstanding |
+| Observability, tracing, immutable WORM audit | `agent-observability` | half wired: the audit half is local and tamper-evident; the shared sink is outstanding |
+| Runtime guardrail: prompt-injection defence, output screening | `agent-guardrail-gateway` | **not wired.** No `GuardrailPort` exists. Bind it before untrusted text reaches the model |
+| Governed RAG / ACL-aware knowledge base | `enterprise-knowledge-base` | not used: this vertical retrieves nothing, so P-05 and R3 do not apply yet |
 | Reconciliation matching and break resolution | **F1** `recon-breaks-engine` | consumed as a worklist snapshot; F5 owns no matching logic |
 | Dispute and chargeback lifecycle | **F2** `disputes-chargebacks-manager` | consumed as a worklist snapshot; F5 owns no dispute logic |
 
