@@ -38,6 +38,11 @@ locals {
     "roles/cloudtrace.agent",             # tracer.py
     "roles/secretmanager.secretAccessor", # the inbound and outbound service credentials
     "roles/aiplatform.user",              # the narration surface a vertical binds
+    # READ only, deliberately. This service reads the feeds' own published exports and writes
+    # none of them: F1 owns the shape and F2 conforms to it. dataEditor here would be authority
+    # nothing uses, over another service's contract.
+    "roles/bigquery.dataViewer", # ops_feeds.py (bigquery.tf)
+    "roles/bigquery.jobUser",    # running the query is a separate grant
   ]
 }
 

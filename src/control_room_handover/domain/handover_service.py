@@ -131,7 +131,9 @@ class HandoverService:
     def _read_feeds(self, request: HandoverRequest) -> dict[FeedId, tuple[FeedSnapshot, ...]]:
         out: dict[FeedId, tuple[FeedSnapshot, ...]] = {}
         for feed_id in self._ops_feeds.feeds():
-            out[feed_id] = self._ops_feeds.snapshots(feed_id, request.lookback_days)
+            out[feed_id] = self._ops_feeds.snapshots(
+                feed_id, request.lookback_days, as_of=request.as_of
+            )
         return out
 
     # ------------------------------------------------------------------ narration

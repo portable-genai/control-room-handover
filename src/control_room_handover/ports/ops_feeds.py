@@ -24,8 +24,19 @@ class OpsFeedPort(Protocol):
         """The feeds this deployment is wired to read. Exactly the registered set, never more."""
         ...
 
-    def snapshots(self, feed_id: FeedId, lookback_days: int) -> tuple[FeedSnapshot, ...]:
+    def snapshots(
+        self, feed_id: FeedId, lookback_days: int, *, as_of: str
+    ) -> tuple[FeedSnapshot, ...]:
         """Return the cited snapshot series for ``feed_id`` over the window, oldest first.
+
+        The window ENDS at ``as_of`` and reaches ``lookback_days`` back from it. That date is
+        the handover's own, carried on the request, and it is a required argument here because
+        it used to be dropped at this boundary: the service passed only the lookback, and the
+        managed adapter filled the gap by reading a wall clock. A handover written for any date
+        but today then read the wrong window while its heading reported the requested one, and
+        ``domain/acknowledgement.py`` says in as many words that the as-of is an input and never
+        a clock read. The offline adapter could not disagree, because it took the last N ROWS of
+        a file and never looked at a date at all.
 
         Never computes: each row is the source feed's own published export. An unknown feed
         raises rather than returning an empty series that would read as a quiet zero.

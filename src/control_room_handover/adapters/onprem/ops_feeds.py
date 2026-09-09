@@ -24,7 +24,9 @@ class OnPremOpsFeedAdapter:
             "warehouse export reader (see docs/onprem-migration.md)."
         )
 
-    def snapshots(self, feed_id: FeedId, lookback_days: int) -> tuple[FeedSnapshot, ...]:
+    def snapshots(
+        self, feed_id: FeedId, lookback_days: int, *, as_of: str
+    ) -> tuple[FeedSnapshot, ...]:
         raise NotImplementedError(
             "on-prem ops-feed reading is a portability placeholder: bind the client's own "
             "warehouse export reader (see docs/onprem-migration.md)."

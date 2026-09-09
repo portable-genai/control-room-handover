@@ -1,21 +1,26 @@
-"""Drift guard: every golden ops-worklist export fixture conforms to the consumed contract.
+"""Drift guard: every shipped export row conforms to the consumed contract.
 
 F5 consumes the ops-worklist export F1 publishes and F2 conforms to. This repo holds a CONSUMED
 copy of the schema (``schema/ops_worklist_export.schema.json``) because F1 is not present in this
 wave; the assumption is recorded in ``docs/ops-metrics-contract.md``. This suite validates every
-bundled fixture row against that schema, so a fixture that stopped conforming, or a schema that
-drifted from the fixtures, fails the build rather than the feed reader failing at run time. It
-also proves the feed port fails CLOSED on an unknown feed and a malformed row.
+shipped row against that schema, so a row that stopped conforming, or a schema that drifted from
+the rows, fails the build rather than the feed reader failing at run time. It also proves the feed
+port fails CLOSED on an unknown feed and a malformed row.
+
+The rows validated are the demo book's (``src/control_room_handover/data/demo_book/``), which is
+what BOTH stores now serve: the DuckDB store the offline profiles read and the BigQuery tables
+the loader fills. They used to be a separate ``fixtures/ops_worklist/`` directory that only the
+offline adapter read, so this guard held the contract against rows the deployment never saw.
 """
 
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import jsonschema
 import pytest
 
+from control_room_handover import demo_book
 from control_room_handover.adapters._feed_parser import snapshot_from_export_row
 from control_room_handover.adapters.local.ops_feeds import LocalOpsFeedAdapter
 from control_room_handover.config import Settings
@@ -27,25 +32,17 @@ from tests import REPO_ROOT
 _SCHEMA = json.loads(
     (REPO_ROOT / "schema" / "ops_worklist_export.schema.json").read_text(encoding="utf-8")
 )
-_FIXTURES = sorted((REPO_ROOT / "fixtures" / "ops_worklist").glob("*.jsonl"))
+_EXPORT_TABLES = [table.name for table in demo_book.TABLES]
 
 
-def _rows(path: Path) -> list[dict[str, object]]:
-    return [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip() and not line.lstrip().startswith("#")
-    ]
+def test_there_are_rows_to_validate() -> None:
+    assert _EXPORT_TABLES, "the book ships no export tables; the drift guard would be vacuous"
 
 
-def test_there_are_fixtures_to_validate() -> None:
-    assert _FIXTURES, "no golden export fixtures were found; the drift guard would be vacuous"
-
-
-@pytest.mark.parametrize("path", _FIXTURES, ids=lambda p: p.name)
-def test_every_fixture_row_conforms_to_the_consumed_contract(path: Path) -> None:
-    rows = _rows(path)
-    assert rows, f"{path.name} is empty"
+@pytest.mark.parametrize("table", _EXPORT_TABLES)
+def test_every_shipped_row_conforms_to_the_consumed_contract(table: str) -> None:
+    rows = demo_book.BOOK.rows(table)
+    assert rows, f"{table} is empty"
     for row in rows:
         jsonschema.validate(row, _SCHEMA)
         # And it must parse into a validated domain snapshot without loss.
