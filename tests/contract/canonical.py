@@ -28,6 +28,7 @@ from hex_service_kit.identity import IdentityError, Principal, RequestContext
 from hex_service_kit.observability import TokenUsage
 from speech_lexicon_kit.ports import SpeechSynthesisRequest, SynthesisResult
 
+from control_room_handover import demo_book
 from control_room_handover.domain.kernel import (
     AuditEvent,
     Citation,
@@ -111,7 +112,10 @@ def _review_answered(adapter: Any, result: Any) -> bool:
 
 
 def _feeds_invoke(adapter: Any) -> Any:
-    return adapter.snapshots(FeedId.RECON_BREAKS, 14)
+    # The as-of is the handover's own date, carried on the request. It is passed here rather
+    # than defaulted because the port used to drop it and the managed adapter read a wall clock
+    # in its place, which is the difference this canonical call exists to keep visible.
+    return adapter.snapshots(FeedId.RECON_BREAKS, 14, as_of=demo_book.book_as_of())
 
 
 def _feeds_answered(_adapter: Any, result: Any) -> bool:
@@ -177,8 +181,13 @@ CANONICAL_CALLS: dict[str, PortCase] = {
     "ops_feeds": PortCase(
         invoke=_feeds_invoke,
         answered=_feeds_answered,
-        # The lazy `google.cloud.bigquery` import is the first thing the managed reader does.
-        managed_refusal=(ImportError,),
+        # The CONFIGURATION check runs before the lazy `google.cloud.bigquery` import, so the
+        # refusal names the missing variable rather than a missing package. That order is
+        # deliberate: an unconfigured dataset is the more actionable of the two, and an operator
+        # reading an ImportError would go looking for a wheel. The dataset used to be hardcoded
+        # into the adapter, so there was no configuration to be missing and the import was the
+        # only thing left to fail.
+        managed_refusal=(RuntimeError,),
         detail="return the cited snapshot series for a feed",
     ),
     "generation": PortCase(
