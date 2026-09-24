@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel
 
 from ..domain.models import HandoverBrief
@@ -51,9 +53,12 @@ class HandoverResponse(BaseModel):
     #: engine's, so a discarded narration degrades the prose, never the figures.
     narration_grounded: bool
     #: Where the handover WENT for the incoming lead's sign-off (rule R8): the human-review-console
-    #: review id or
-    #: the local queue reference. Never empty, because a handover always routes for acknowledgement.
+    #: review id or the local queue reference. Empty exactly when ``review_routing`` is not
+    #: ``routed``.
     review_ref: str = ""
+    #: What happened to the hand-off: routed, failed, off or not_required. ``failed`` means the
+    #: handover is NOT queued for the incoming lead's sign-off, and the console says so.
+    review_routing: Literal["routed", "failed", "off", "not_required"] = "not_required"
     voice_ref: str = ""
     as_of: str = ""
     total_queue_depth: int = 0
@@ -62,7 +67,9 @@ class HandoverResponse(BaseModel):
     citations: list[CitationModel] = []
 
     @classmethod
-    def from_domain(cls, brief: HandoverBrief, *, review_ref: str = "") -> HandoverResponse:
+    def from_domain(
+        cls, brief: HandoverBrief, *, review_ref: str = "", review_routing: str = "not_required"
+    ) -> HandoverResponse:
         scorecard = brief.scorecard
         return cls(
             subject=brief.subject,
@@ -72,6 +79,7 @@ class HandoverResponse(BaseModel):
             requires_human_review=brief.requires_human_review,
             narration_grounded=brief.narration_grounded,
             review_ref=review_ref,
+            review_routing=review_routing,  # type: ignore[arg-type]
             voice_ref=brief.voice_ref,
             as_of=scorecard.as_of,
             total_queue_depth=scorecard.total_queue_depth,

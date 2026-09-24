@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING, Any
 from hex_service_kit.serialization import to_jsonable
 from pii_kit import redact
 
+from ..adapters.controls import RecordingReviewRouter
 from ..config import Container, Settings, build_container
 from ..domain.handover_service import HandoverService
 from ..domain.models import HandoverRequest
@@ -77,7 +78,8 @@ def build_shift_handover(
 
     Returns:
       A JSON-safe result dict with every string masked for personal data, plus ``review_ref``:
-      where the handover WENT for sign-off. It is never empty, because a handover always routes.
+      where the handover WENT for sign-off, and ``review_routing``: routed, failed, off or
+      not_required. The reference is empty unless the hand-off was routed.
     """
     container = _container(settings)
     service = HandoverService(
@@ -91,11 +93,13 @@ def build_shift_handover(
         HandoverRequest(shift_id=shift_id, as_of=as_of, lookback_days=lookback_days),
         actor=actor,
     )
-    review_ref = container.review_router.route(brief, maker=actor, tenant=tenant)
+    routing = RecordingReviewRouter(container.review_router)
+    review_ref = routing.route(brief, maker=actor, tenant=tenant)
     payload = _redacted(to_jsonable(brief))
     if not isinstance(payload, dict):  # pragma: no cover - dataclasses serialise to objects
         raise TypeError("a handover brief must serialise to a JSON object")
     payload["review_ref"] = review_ref
+    payload["review_routing"] = routing.outcome.value
     return payload
 
 

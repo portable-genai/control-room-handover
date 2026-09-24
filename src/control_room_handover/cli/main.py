@@ -7,6 +7,7 @@ import sys
 
 from hex_service_kit.logging import configure_logging
 
+from ..adapters.controls import RecordingReviewRouter
 from ..config import build_container
 from ..domain.handover_service import HandoverService
 from ..domain.models import HandoverRequest
@@ -56,8 +57,9 @@ def main(argv: list[str] | None = None) -> int:
                 f"{feed.sla_breached}, drain {feed.drain_ratio}{callout}"
             )
         # Rule R8 on the CLI path too: the same brief, the same router, in the same call.
-        ref = container.review_router.route(brief, maker=args.actor, tenant=args.tenant)
-        print(f"  routed for shift-lead acknowledgement: {ref}")
+        routing = RecordingReviewRouter(container.review_router)
+        ref = routing.route(brief, maker=args.actor, tenant=args.tenant)
+        print(f"  shift-lead acknowledgement hand-off: {routing.outcome.value} {ref}".rstrip())
         return 0
 
     return 2  # pragma: no cover - argparse requires a subcommand

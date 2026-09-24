@@ -67,6 +67,7 @@ from hex_service_kit.web import (
     make_require_service_caller,
 )
 
+from ..adapters.controls import RecordingReviewRouter
 from ..config import (
     LOCAL_PROFILE,
     Container,
@@ -304,10 +305,13 @@ def handover(
         actor=principal.actor,
     )
     # Rule R8: route for the incoming lead's sign-off in the same request that produced the brief.
-    review_ref = container.review_router.route(
-        brief, maker=principal.actor, tenant=principal.tenant
+    # The hand-off never fails an already-built, already-audited handover; the response says
+    # what happened to it instead (the fleet's runtime-control contract).
+    routing = RecordingReviewRouter(container.review_router)
+    review_ref = routing.route(brief, maker=principal.actor, tenant=principal.tenant)
+    return HandoverResponse.from_domain(
+        brief, review_ref=review_ref, review_routing=routing.outcome.value
     )
-    return HandoverResponse.from_domain(brief, review_ref=review_ref)
 
 
 @app.post("/v1/audit/ping", dependencies=[Depends(require_service_caller)], tags=["ops"])
