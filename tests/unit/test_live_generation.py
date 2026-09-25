@@ -175,6 +175,6 @@ def test_live_takes_the_laptop_posture() -> None:
     LocalIdentityAdapter(local_settings(profile=LIVE_PROFILE))
 
 
-def test_the_banner_names_the_local_model(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_the_model_pill_names_the_local_model(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LOCAL_MODEL", "some-org/some-local-model")
     assert local_settings(profile=LIVE_PROFILE).generator_model == "some-org/some-local-model"

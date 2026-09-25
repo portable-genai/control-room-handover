@@ -10,6 +10,8 @@ never smuggle a fabricated figure into a brief.
 
 from __future__ import annotations
 
+from hex_service_kit import provenance
+
 from ...config import Settings
 from ...domain.models import LlmRequest, LlmResponse
 
@@ -31,10 +33,13 @@ class CloudGenerationAdapter:
         model = request.model or _DEFAULT_MODEL
         prompt = "\n\n".join(message.content for message in request.messages)
         config = types.GenerateContentConfig(
-            temperature=request.temperature,
             max_output_tokens=request.max_output_tokens,
             response_mime_type="application/json",
             response_schema=request.response_schema,
         )
+        if request.temperature is not None:
+            # Free sampling is an ABSENT temperature, never 1.0: only a pinned call sends one.
+            config.temperature = request.temperature
         response = client.models.generate_content(model=model, contents=prompt, config=config)
+        provenance.note_model(model)
         return LlmResponse(text=response.text or "", model=model)

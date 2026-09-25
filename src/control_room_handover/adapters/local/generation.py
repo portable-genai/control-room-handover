@@ -13,6 +13,8 @@ from __future__ import annotations
 import json
 import re
 
+from hex_service_kit import provenance
+
 from ...config import Settings
 from ...domain.models import LlmRequest, LlmResponse
 
@@ -31,12 +33,15 @@ _SUMMARY = (
 class LocalDeterministicGenerationAdapter:
     """Deterministic narrator whose ``generate`` returns JSON matching the request schema."""
 
-    MODEL = "offline-deterministic"
+    #: What this narrator answers as, for the console's model pill: the name ``generator_model``
+    #: reports under ``local``, so the pill before and after an answer agree.
+    MODEL = "deterministic-offline-stub"
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
 
     def generate(self, request: LlmRequest) -> LlmResponse:
+        provenance.note_model(self.MODEL)
         source_ids = self._source_ids(request)
         body = {"summary": _SUMMARY, "used_source_ids": source_ids}
         return LlmResponse(text=json.dumps(body), model=self.MODEL)
