@@ -59,6 +59,10 @@ One env var, `CONTROLROOM_PROFILE`, selects the adapter family:
 
 - `local` (default) : SDK-free offline stack (seeded dev personas, hash-chained SQLite WORM audit
   from the commons). No cloud SDK. The default for dev/test/CI.
+- `live` : the `local` stack and posture, with the `generation` port narrating through a local
+  open-weight model via the shared `hex_service_kit.localmodel` client (`LOCAL_MODEL_URL`,
+  `LOCAL_MODEL`; the client's error names the two-line server start recipe). Run it with
+  `CONTROLROOM_PROFILE=live make run-api`.
 - `gcp` : managed cloud (Cloud Logging WORM, IAP identity). SDK imports are lazy.
 - `onprem` : fail-fast `NotImplementedError` placeholders (the reversibility proof, P-12).
 
