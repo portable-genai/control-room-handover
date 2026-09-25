@@ -396,10 +396,11 @@ _PKG = "control_room_handover"
 
 
 def _rebind(port: str, offline: str, onprem: str) -> list[str]:
-    """Settings-file lines binding ``port``: local/gcp to the offline adapter, onprem to exit."""
+    """Settings-file lines binding ``port``: local/live/gcp offline, onprem to the exit."""
     return [
         f"  {port}:",
         f"    local: {_PKG}.adapters.{offline}",
+        f"    live: {_PKG}.adapters.{offline}",
         f"    gcp: {_PKG}.adapters.{offline}",
         f"    onprem: {_PKG}.adapters.onprem.{onprem}",
     ]
@@ -413,29 +414,33 @@ _REBOUND_SETTINGS = "\n".join(
         "review_url: ${HUMAN_REVIEW_URL:-}",
         "adapters:",
         "  audit:",
-        *[f"    {p}: {_PKG}.adapters.local.audit:LocalAuditAdapter" for p in ("local", "gcp")],
+        *[
+            f"    {p}: {_PKG}.adapters.local.audit:LocalAuditAdapter"
+            for p in ("local", "live", "gcp")
+        ],
         f"    onprem: {_PKG}.adapters.onprem.audit:OnPremAuditAdapter",
         "  identity:",
         f"    local: {_PKG}.adapters.local.identity:LocalIdentityAdapter",
+        f"    live: {_PKG}.adapters.local.identity:LocalIdentityAdapter",
         f"    gcp: {_PKG}.adapters.gcp.identity:IapIdentityAdapter",
         f"    onprem: {_PKG}.adapters.onprem.identity:OnPremIdentityAdapter",
         "  review_router:",
         *[
             f"    {p}: {_PKG}.adapters.local.review_router:LocalReviewRouter"
-            for p in ("local", "gcp")
+            for p in ("local", "live", "gcp")
         ],
         f"    onprem: {_PKG}.adapters.onprem.review_router:OnPremReviewRouter",
         # Every port must bind every profile or `_bindings_from` refuses the whole file.
         "  tracer:",
         *[
             f"    {p}: {_PKG}.adapters.local.tracer:LocalNoopTracerAdapter"
-            for p in ("local", "gcp")
+            for p in ("local", "live", "gcp")
         ],
         f"    onprem: {_PKG}.adapters.onprem.tracer:OnPremTracerAdapter",
         "  evaluation:",
         *[
             f"    {p}: {_PKG}.adapters.local.evaluation:LocalOfflineEvalAdapter"
-            for p in ("local", "gcp")
+            for p in ("local", "live", "gcp")
         ],
         f"    onprem: {_PKG}.adapters.onprem.evaluation:OnPremEvalAdapter",
         # The data / narration / voice ports are rebound to the SDK-free adapters too, so the

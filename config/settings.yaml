@@ -56,7 +56,9 @@ iap_audience: ${CONTROLROOM_IAP_AUDIENCE:-}
 review_url: ${HUMAN_REVIEW_URL:-}
 
 # The per-port adapter map: the ONLY place a binding lives, so switching the whole stack is a
-# configuration change rather than a code edit. Every port must bind every profile; the loader
+# configuration change rather than a code edit. `live` binds what `local` binds except the model
+# port, which calls the local open-weight model server (LOCAL_MODEL_URL, LOCAL_MODEL) through the
+# shared hex_service_kit.localmodel client. Every port must bind every profile; the loader
 # refuses a partial block and `tests/test_settings_file.py` fails the build if this drifts from
 # `config.DEFAULT_BINDINGS`.
 project_id: ${GOOGLE_CLOUD_PROJECT:-}
@@ -68,14 +70,17 @@ audio_bucket: ${CONTROLROOM_AUDIO_BUCKET:-}
 adapters:
   audit:
     local: control_room_handover.adapters.local.audit:LocalAuditAdapter
+    live: control_room_handover.adapters.local.audit:LocalAuditAdapter
     gcp: control_room_handover.adapters.gcp.audit:CloudAuditAdapter
     onprem: control_room_handover.adapters.onprem.audit:OnPremAuditAdapter
   identity:
     local: control_room_handover.adapters.local.identity:LocalIdentityAdapter
+    live: control_room_handover.adapters.local.identity:LocalIdentityAdapter
     gcp: control_room_handover.adapters.gcp.identity:IapIdentityAdapter
     onprem: control_room_handover.adapters.onprem.identity:OnPremIdentityAdapter
   review_router:
     local: control_room_handover.adapters.local.review_router:LocalReviewRouter
+    live: control_room_handover.adapters.local.review_router:LocalReviewRouter
     gcp: control_room_handover.adapters.gcp.review_router:CloudReviewRouter
     onprem: control_room_handover.adapters.onprem.review_router:OnPremReviewRouter
 
@@ -85,6 +90,7 @@ adapters:
   # correctness, so onprem is ABSENT rather than fatal, unlike the other placeholders.
   tracer:
     local: control_room_handover.adapters.local.tracer:LocalNoopTracerAdapter
+    live: control_room_handover.adapters.local.tracer:LocalNoopTracerAdapter
     gcp: control_room_handover.adapters.gcp.tracer:CloudTracerAdapter
     onprem: control_room_handover.adapters.onprem.tracer:OnPremTracerAdapter
 
@@ -93,17 +99,21 @@ adapters:
   # nothing.
   evaluation:
     local: control_room_handover.adapters.local.evaluation:LocalOfflineEvalAdapter
+    live: control_room_handover.adapters.local.evaluation:LocalOfflineEvalAdapter
     gcp: control_room_handover.adapters.gcp.evaluation:ManagedEvalGateAdapter
     onprem: control_room_handover.adapters.onprem.evaluation:OnPremEvalAdapter
   ops_feeds:
     local: control_room_handover.adapters.local.ops_feeds:LocalOpsFeedAdapter
+    live: control_room_handover.adapters.local.ops_feeds:LocalOpsFeedAdapter
     gcp: control_room_handover.adapters.gcp.ops_feeds:CloudOpsFeedAdapter
     onprem: control_room_handover.adapters.onprem.ops_feeds:OnPremOpsFeedAdapter
   generation:
     local: control_room_handover.adapters.local.generation:LocalDeterministicGenerationAdapter
+    live: control_room_handover.adapters.live.generation:LocalModelGenerationAdapter
     gcp: control_room_handover.adapters.gcp.generation:CloudGenerationAdapter
     onprem: control_room_handover.adapters.onprem.generation:OnPremGenerationAdapter
   tts:
     local: control_room_handover.adapters.local.tts:LocalNoOpTtsAdapter
+    live: control_room_handover.adapters.local.tts:LocalNoOpTtsAdapter
     gcp: control_room_handover.adapters.gcp.tts:CloudTtsAdapter
     onprem: control_room_handover.adapters.onprem.tts:OnPremTtsAdapter
