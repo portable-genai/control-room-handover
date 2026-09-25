@@ -203,7 +203,10 @@ class LlmRequest:
     messages: tuple[LlmMessage, ...]
     response_schema: dict[str, object] | None = None
     model: str | None = None
-    temperature: float = 0.0  # omitted at a call site means this value; it must not sample
+    #: Sampling for THIS call. ``None`` (the default) sends no temperature at all: some models
+    #: reject the parameter, so free means absent, never ``1.0``. Pin ``0.0`` at a call site whose
+    #: output is extracted, classified, scored or compared; narration is drafting and stays free.
+    temperature: float | None = None
     max_output_tokens: int = 1024
 
 
